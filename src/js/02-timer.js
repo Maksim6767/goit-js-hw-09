@@ -1,7 +1,7 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 // require('flatpickr/dist/themes/dark.css');
-// import Notiflix from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = {
   buttonStartTimer: document.querySelector('[data-start]'),
@@ -26,14 +26,13 @@ const options = {
         if (selectedDates[0] - currentDate > 0) {
         refs.buttonStartTimer.disabled = false;
         } else {
-            window.alert("Please choose a date in the future");
-            refs.buttonStartTimer.disabled = true;
-        // Notiflix.Notify.failure('Please choose a date in the future', {
-        //  timeout: 1500,
-        //  width: '400px',
-        //     });
-        };
-    }
+         refs.buttonStartTimer.disabled = true;
+         Notify.failure('Please choose a date in the future', {
+         timeout: 2000,
+         width: '500px',
+        });
+    };
+  },
 };
     
 function convertMs(ms) {
@@ -69,7 +68,7 @@ const onStartBtnClick = () => {
 
         if (countdown < 0) {
             clearInterval(timerId);
-             return;
+            return;
         }
         updateTimerFace(convertMs(countdown));
     }, 1000);
@@ -82,9 +81,10 @@ const onStartBtnClick = () => {
   refs.timerSeconds.textContent = addLeadingZero(seconds);
 };
 
-const inputDate = document.querySelector("#datetime-picker");
-const fp = flatpickr('inputDate', options);  
+const fp = flatpickr('#datetime-picker', options);
 
 refs.buttonStartTimer.addEventListener('click', onStartBtnClick);
 
+const timer = document.querySelector('.timer');
+timer.setAttribute('style', 'color: grey; text-transform: uppercase; font-weight: 700;')
 
