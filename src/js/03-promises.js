@@ -45,5 +45,5 @@ function onSuccess({ position, delay }) {
 }
 
 // Set event listener submit on form
-refs.form.addEventListener('submit', onSubmitForm);
+form.addEventListener('submit', onSubmitForm);
 
