@@ -1,9 +1,12 @@
+// Import library
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+// Get form element
 const refs = {
   form: document.querySelector('.form'),
 };
 
+// Create promise
 function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -17,24 +20,21 @@ function createPromise(position, delay) {
   });
 }
 
-function onCreatePromises(event) {
+// Submit form
+function onSubmitForm(event) {
   event.preventDefault();
-  const formData = new FormData(event.currentTarget);
-  const dataParams = [];
 
-  for (const [key, value] of formData.entries()) {
-    dataParams[key] = Number(value);
-  }
+  let delay = Number(form.delay.value);
 
-  let {delay, step, amount } = dataParams;
-
-  for (let i = 1; i <= amount; i += 1) {
-    delay += step;
+  for (let i = 1; i <= form.amount.value; i += 1) {
     createPromise(i, delay)
-      .then(onSuccess)
-      .catch(onError);
-
-    refs.form.reset();
+      .then(({ position, delay }) => {
+        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
+    delay += Number(form.step.value);
   }
 }
 
@@ -46,4 +46,6 @@ function onSuccess({ position, delay }) {
   Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
 }
 
-refs.form.addEventListener('submit', onCreatePromises);
+// Set event listener submit on form
+refs.form.addEventListener('submit', onSubmitForm);
+
